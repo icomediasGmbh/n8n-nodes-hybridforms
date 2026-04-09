@@ -1,0 +1,58 @@
+{
+	"name": "@icomedias/n8n-nodes-hybridforms",
+	"version": "0.1.0",
+	"description": "n8n community node for HybridForms Simple-API integration",
+	"license": "MIT",
+	"homepage": "https://www.hybridforms.net",
+	"keywords": [
+		"n8n-community-node-package",
+		"hybridforms",
+		"forms",
+		"workflow"
+	],
+	"author": {
+		"name": "icomedias GmbH",
+        "url": "https://icomedias.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/icomediasGmbh/n8n-nodes-hybridforms.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/HybridFormsApi.credentials.js",
+			"dist/credentials/HybridFormsBasicAuthApi.credentials.js",
+			"dist/credentials/HybridFormsOAuth2Api.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/HybridForms/HybridForms.node.js",
+			"dist/nodes/HybridFormsTrigger/HybridFormsTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "*",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^19.0.4",
+		"typescript": "^6.0.2",
+		"vitest": "^3.0.0"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
