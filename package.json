@@ -1,6 +1,6 @@
 {
 	"name": "@icomedias/n8n-nodes-hybridforms",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "n8n community node for HybridForms Simple-API integration",
 	"license": "MIT",
 	"homepage": "https://www.hybridforms.net",
@@ -12,7 +12,7 @@
 	],
 	"author": {
 		"name": "icomedias GmbH",
-        "url": "https://icomedias.com"
+		"url": "https://icomedias.com"
 	},
 	"repository": {
 		"type": "git",
