@@ -30,6 +30,9 @@ interface StructureBlock {
 
 interface StructureTab {
 	blocks: StructureBlock[];
+	blockTemplates?: StructureBlock[];
+    repeatable?: boolean;
+    id?: string;
 }
 
 interface StructureSection {
@@ -164,18 +167,64 @@ export class HybridForms implements INodeType {
 				})) as FormStructure;
 
 				const options: INodePropertyOptions[] = [];
-
 				for (const section of response.sections ?? []) {
 					for (const tab of section.tabs ?? []) {
-						for (const block of tab.blocks ?? []) {
-							for (const field of block.fields ?? []) {
-								options.push({
-									name: field.id + (field.label ? ` (${field.label})` : ''),
-									value: field.id,
-									description: `Type: ${field.type}`,
-								});
-							}
-						}
+                        if (!tab.repeatable) {
+                            for (const block of tab.blocks ?? []) {
+                                // Skip repeatable instance blocks when blockTemplates exist,
+                                // as they contain suffixed IDs (_hfrepeating_N) instead of the
+                                // canonical template IDs
+                                for (const field of block.fields ?? []) {
+                                    options.push({
+                                        name: field.id + (field.label ? ` (${field.label})` : ''),
+                                        value: field.id,
+                                        description: `Type: ${field.type}`,
+                                    });
+                                }
+                            }
+                        }
+					}
+				}
+
+				return options;
+			},
+			async getRuFormFields(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const authType = this.getCurrentNodeParameter('authentication') as string;
+				const credentialName = resolveCredentialName(authType);
+
+				const credentials = await this.getCredentials(credentialName);
+				const client = credentials.client as string;
+				const serverUrl = (credentials.serverUrl as string).replace(/\/$/, '');
+
+				const formDefinitionId = this.getCurrentNodeParameter('formDefinitionId') as string;
+				if (!formDefinitionId) {
+					return [];
+				}
+
+				const url = `${serverUrl}/api/app/${encodeURIComponent(client)}/formdefinitions/${encodeURIComponent(formDefinitionId)}/structure`;
+
+				const response = (await this.helpers.httpRequestWithAuthentication.call(this, credentialName, {
+					method: 'GET',
+					url: url,
+					json: true,
+				})) as FormStructure;
+
+				const options: INodePropertyOptions[] = [];
+				for (const section of response.sections ?? []) {
+					for (const tab of section.tabs ?? []) {
+                        if (tab.repeatable) {
+                            // Repeating unit fields are defined in blockTemplates with their
+                            // canonical (non-suffixed) IDs
+                            for (const block of tab.blockTemplates ?? []) {
+                                for (const field of block.fields ?? []) {
+                                    options.push({
+                                        name: field.id + (field.label ? ` (${field.label})` : ''),
+                                        value: field.id,
+                                        description: `Type: ${field.type}`,
+                                    });
+                                }
+                            }
+                        }
 					}
 				}
 

@@ -41,6 +41,7 @@
 		],
 		"nodes": [
 			"dist/nodes/HybridForms/HybridForms.node.js",
+			"dist/nodes/HybridFormsListTrigger/HybridFormsListTrigger.node.js",
 			"dist/nodes/HybridFormsTrigger/HybridFormsTrigger.node.js"
 		]
 	},

@@ -1,16 +1,17 @@
 import type { INodeProperties } from 'n8n-workflow';
 
-const fieldKeyValuePair: INodeProperties[] = [
+const fieldKeyValuePair = (ru: boolean): INodeProperties[] => [
 	{
 		displayName: 'Field Name or ID',
 		name: 'name',
 		type: 'options',
 		typeOptions: {
-			loadOptionsMethod: 'getFormFields',
+			loadOptionsMethod: ru ? 'getRuFormFields' : 'getFormFields',
 			loadOptionsDependsOn: ['formDefinitionId'],
 		},
 		default: '',
-		description: 'The name of the form field (loaded from form definition structure). Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+		description:
+			'The name of the form field (loaded from form definition structure). Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 	{
 		displayName: 'Field Value',
@@ -233,7 +234,7 @@ export const formFields: INodeProperties[] = [
 			{
 				displayName: 'Field',
 				name: 'field',
-				values: fieldKeyValuePair,
+				values: fieldKeyValuePair(false),
 			},
 		],
 		description: 'Form field values to set (key-value pairs)',
@@ -297,7 +298,7 @@ export const formFields: INodeProperties[] = [
 							{
 								displayName: 'Field',
 								name: 'field',
-								values: fieldKeyValuePair,
+								values: fieldKeyValuePair(true),
 							},
 						],
 						description: 'Field values to set on this repeating unit tab',
